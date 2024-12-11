@@ -1,12 +1,26 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import ContactPopup from './ContactPopup';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleTrendingClick = (e) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollToFeatured: true } });
+    } else {
+      document.getElementById('featured-properties')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (isMenuOpen) toggleMenu();
   };
 
   return (
@@ -14,11 +28,11 @@ export default function Header() {
       <div className='flex justify-between items-center max-w-7xl mx-auto p-4'>
         <Link to='/' className='flex items-center gap-2 z-20'>
           <img 
-            src="/blueroof-logo.png" 
+            src="src/assets/logo-removebg-preview (1).png" 
             alt="BlueRoof India" 
             className="h-8"
           />
-          <span className='font-bold text-lg'>India</span>
+          <span className='font-bold text-lg'></span>
         </Link>
 
         {/* Hamburger Menu Button */}
@@ -32,15 +46,24 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className='hidden lg:flex gap-8 items-center text-sm'>
-          <Link to='/trending' className='hover:text-[#FF5A3D] transition duration-300'>
-            Trending
+          <Link to='/' className='hover:text-[#FF5A3D] transition duration-300'>
+            Home
           </Link>
+          <button 
+            onClick={handleTrendingClick}
+            className='hover:text-[#FF5A3D] transition duration-300'
+          >
+            Trending Properties
+          </button>
           <Link to='/about' className='hover:text-[#FF5A3D] transition duration-300'>
             About Us
           </Link>
-          <Link to='/post-property' className='hover:text-[#FF5A3D] transition duration-300'>
+          <button 
+            className='text-white hover:text-[#FF5A3D] transition duration-300'
+            onClick={() => setIsContactPopupOpen(true)}
+          >
             Post Property (Free)
-          </Link>
+          </button>
           <Link to='/news' className='hover:text-[#FF5A3D] transition duration-300'>
             News
           </Link>
@@ -84,12 +107,18 @@ export default function Header() {
             {/* Menu Items */}
             <nav className='flex flex-col p-4 gap-4'>
               <Link 
-                to='/trending' 
+                to='/' 
                 className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center'
                 onClick={toggleMenu}
               >
-                Trending
+                Home
               </Link>
+              <button 
+                onClick={handleTrendingClick}
+                className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center text-left w-full'
+              >
+                Trending Properties
+              </button>
               <Link 
                 to='/about' 
                 className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center'
@@ -97,13 +126,15 @@ export default function Header() {
               >
                 About Us
               </Link>
-              <Link 
-                to='/post-property' 
-                className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center'
-                onClick={toggleMenu}
+              <button 
+                onClick={() => {
+                  setIsContactPopupOpen(true);
+                  toggleMenu();
+                }}
+                className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center text-left w-full'
               >
                 Post Property (Free)
-              </Link>
+              </button>
               <Link 
                 to='/news' 
                 className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center'
@@ -121,6 +152,12 @@ export default function Header() {
             </nav>
           </div>
         </div>
+
+        {/* Contact Popup */}
+        <ContactPopup 
+          isOpen={isContactPopupOpen} 
+          onClose={() => setIsContactPopupOpen(false)} 
+        />
       </div>
     </header>
   );

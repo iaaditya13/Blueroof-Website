@@ -6,7 +6,7 @@ import SwiperCore from 'swiper';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { useEffect, useState } from 'react';
-import { dummyImages } from '../utils/dummyData';
+import { allListings } from '../data/propertyData';
 
 export default function PropertyDetails() {
   const { id } = useParams();
@@ -16,116 +16,6 @@ export default function PropertyDetails() {
 
   // Get property data based on ID
   useEffect(() => {
-    // This would typically be an API call
-    // For now using the dummy data from Explore page
-    const allListings = [
-      {
-        _id: '1',
-        name: 'Ruparel Jewel',
-        address: 'Parel, Mumbai',
-        description: 'Ruparel Jewel by Ruparel Realty is an under-construction project in Parel, Mumbai, offering luxurious apartments with modern amenities.',
-        type: 'Apartment',
-        regularPrice: 72500000, // 7.25Cr
-        region: 'Mumbai',
-        location: 'Parel',
-        imageUrls: [
-          '/assets/property1.jpg',
-          '/assets/interior1.jpg',
-          '/assets/interior2.jpg',
-          '/assets/interior3.jpg',
-          '/assets/interior4.jpg'
-        ],
-        amenities: [
-          'Swimming Pool',
-          'Gym',
-          'Garden',
-          'Children\'s Play Area',
-          'Club House',
-          '24/7 Security'
-        ],
-        specifications: [
-          '4 BHK',
-          'Built-up Area: 2200 sq.ft.',
-          'Semi-Furnished',
-          'Floor: 25th out of 45 floors',
-          'Age of Construction: Under Construction',
-          'Available From: Dec 2024'
-        ],
-        developer: 'Ruparel Realty',
-        parking: '2 Covered Parking'
-      },
-      {
-        _id: '2',
-        name: 'Corthinia',
-        address: 'Bhandup, Mumbai',
-        description: 'Launching Lodha Corinthia, a glorious 7-acre estate offering an international lifestyle designed for Mumbai\'s finest.',
-        type: 'Villa',
-        regularPrice: 19900000, // 1.99Cr
-        region: 'Mumbai',
-        location: 'Bhandup',
-        imageUrls: [
-          '/assets/property2.jpg',
-          '/assets/interior5.jpg',
-          '/assets/interior6.jpg',
-          '/assets/interior7.jpg',
-          '/assets/interior8.jpg'
-        ],
-        amenities: [
-          'Swimming Pool',
-          'Gym',
-          'Garden',
-          'Children\'s Play Area',
-          'Club House',
-          'Security'
-        ],
-        specifications: [
-          '3 BHK',
-          'Built-up Area: 1500 sq.ft.',
-          'Furnished',
-          'Floor: 15th out of 40 floors',
-          'Age of Construction: New Construction',
-          'Available From: Ready to Move'
-        ],
-        developer: 'Lodha',
-        parking: 'No Parking'
-      },
-      {
-        _id: '3',
-        name: '25 West',
-        address: 'Bandra, Mumbai',
-        description: '25 West by Avdharna Infrastructure is an under-construction project in Bandra West, Mumbai, featuring premium residences.',
-        type: 'Penthouse',
-        regularPrice: 100000000, // 10Cr
-        region: 'Mumbai',
-        location: 'Bandra',
-        imageUrls: [
-          '/assets/property3.jpg',
-          '/assets/interior9.jpg',
-          '/assets/interior10.jpg',
-          '/assets/interior11.jpg',
-          '/assets/interior12.jpg'
-        ],
-        amenities: [
-          'Infinity Pool',
-          'Premium Gym',
-          'Terrace Garden',
-          'Private Theater',
-          'Spa & Sauna',
-          'Concierge Service'
-        ],
-        specifications: [
-          '5 BHK',
-          'Built-up Area: 3500 sq.ft.',
-          'Fully Furnished',
-          'Floor: Penthouse',
-          'Age of Construction: New Launch',
-          'Available From: June 2025'
-        ],
-        developer: 'Avdharna Infrastructure',
-        parking: '3 Covered Parking'
-      }
-    ];
-
     const foundProperty = allListings.find(p => p._id === id);
     if (foundProperty) {
       setProperty(foundProperty);
@@ -142,24 +32,24 @@ export default function PropertyDetails() {
   return (
     <div className="w-full min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 overflow-hidden">
-        {/* Image Carousel */}
+        {/* Image Slider */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 sm:mb-8">
           <div className="aspect-[16/9] w-full relative">
             <Swiper
               navigation
-              pagination={{ type: 'progressbar' }}
+              pagination={{ clickable: true }}
               autoplay={{ delay: 3000 }}
-              className="h-full"
+              className="h-[300px] md:h-[400px] lg:h-[500px]"
             >
-              {dummyImages.properties.map((url, index) => (
+              {property.imageUrls.map((url, index) => (
                 <SwiperSlide key={index}>
-                  <div
-                    className='h-[550px]'
-                    style={{
-                      background: `url(${url}) center no-repeat`,
-                      backgroundSize: 'cover',
-                    }}
-                  ></div>
+                  <div className="relative w-full h-full md:aspect-[4/3] aspect-[16/9]">
+                    <img
+                      src={url}
+                      alt={`Property ${index + 1}`}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>

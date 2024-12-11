@@ -5,11 +5,12 @@ import { FaSearch } from 'react-icons/fa';
 
 export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [filters, setFilters] = useState({
     searchTerm: searchParams.get('searchTerm') || '',
     region: '',
     location: '',
-    propertyType: '',
+    rooms: '',
     cost: ''
   });
 
@@ -24,6 +25,7 @@ export default function Explore() {
       regularPrice: 72500000, // 7.25Cr
       region: 'Mumbai',
       location: 'Parel',
+      rooms: '2BHK',
       imageUrls: [
         '/assets/property1.jpg',
         '/assets/interior1.jpg',
@@ -41,6 +43,7 @@ export default function Explore() {
       regularPrice: 19900000, // 1.99Cr
       region: 'Mumbai',
       location: 'Bhandup',
+      rooms: '3BHK',
       imageUrls: [
         '/assets/property2.jpg',
         '/assets/interior5.jpg',
@@ -58,6 +61,7 @@ export default function Explore() {
       regularPrice: 100000000, // 10Cr
       region: 'Mumbai',
       location: 'Bandra',
+      rooms: '4BHK',
       imageUrls: [
         '/assets/property3.jpg',
         '/assets/interior9.jpg',
@@ -75,6 +79,7 @@ export default function Explore() {
       regularPrice: 25000000, // 2.5Cr
       region: 'Thane',
       location: 'Majiwada',
+      rooms: '2.5BHK',
       imageUrls: [
         '/assets/property4.jpg',
         '/assets/interior13.jpg',
@@ -92,6 +97,7 @@ export default function Explore() {
       regularPrice: 150000000, // 15Cr
       region: 'Mumbai',
       location: 'Prabhadevi',
+      rooms: '5BHK',
       imageUrls: [
         '/assets/property5.jpg',
         '/assets/interior17.jpg',
@@ -109,6 +115,7 @@ export default function Explore() {
       regularPrice: 45000000, // 4.5Cr
       region: 'Mumbai',
       location: 'Malad',
+      rooms: '3BHK',
       imageUrls: [
         '/assets/property6.jpg',
         '/assets/interior21.jpg',
@@ -126,6 +133,7 @@ export default function Explore() {
       regularPrice: 35000000, // 3.5Cr
       region: 'Thane',
       location: 'Thane West',
+      rooms: '2BHK',
       imageUrls: [
         '/assets/property7.jpg',
         '/assets/interior25.jpg',
@@ -158,7 +166,7 @@ export default function Explore() {
   // Get unique values for dropdowns
   const regions = [...new Set(allListings.map(item => item.region))];
   const locations = [...new Set(allListings.map(item => item.location))];
-  const propertyTypes = [...new Set(allListings.map(item => item.type))];
+  const roomOptions = ['1BHK', '2BHK', '3BHK', '4BHK', '5BHK'];
 
   // Filter listings based on current filters
   const filteredListings = useMemo(() => {
@@ -170,7 +178,7 @@ export default function Explore() {
 
       const matchesRegion = !filters.region || listing.region === filters.region;
       const matchesLocation = !filters.location || listing.location === filters.location;
-      const matchesType = !filters.propertyType || listing.type === filters.propertyType;
+      const matchesRooms = !filters.rooms || listing.rooms === filters.rooms;
       
       const matchesCost = !filters.cost || (() => {
         const priceInCr = listing.regularPrice / 10000000; // Convert to Cr
@@ -186,7 +194,7 @@ export default function Explore() {
         }
       })();
 
-      return matchesSearch && matchesRegion && matchesLocation && matchesType && matchesCost;
+      return matchesSearch && matchesRegion && matchesLocation && matchesRooms && matchesCost;
     });
   }, [filters, allListings]);
 
@@ -202,6 +210,16 @@ export default function Explore() {
   return (
     <div className="w-full min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 overflow-hidden">
+        {/* Mobile Filter Toggle Button */}
+        <div className="md:hidden mb-4">
+          <button
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            className="w-full bg-[#FF5A3D] text-white px-4 py-2 rounded-lg hover:bg-[#FF4A2D] transition-colors"
+          >
+            {showMobileFilters ? 'Hide Filters' : 'Show Filters'}
+          </button>
+        </div>
+
         {/* Search and Filter Section */}
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
           {/* Search Bar */}
@@ -217,59 +235,61 @@ export default function Explore() {
             <FaSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {/* Region Filter */}
-            <select
-              id="region"
-              value={filters.region}
-              onChange={handleFilter}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
-            >
-              <option value="">All Regions</option>
-              {regions.map((region) => (
-                <option key={region} value={region}>{region}</option>
-              ))}
-            </select>
+          {/* Filters - Hidden on mobile unless toggled */}
+          <div className={`${showMobileFilters ? 'block' : 'hidden'} md:block`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {/* Region Filter */}
+              <select
+                id="region"
+                value={filters.region}
+                onChange={handleFilter}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
+              >
+                <option value="">All Regions</option>
+                {regions.map((region) => (
+                  <option key={region} value={region}>{region}</option>
+                ))}
+              </select>
 
-            {/* Location Filter */}
-            <select
-              id="location"
-              value={filters.location}
-              onChange={handleFilter}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
-            >
-              <option value="">All Locations</option>
-              {locations.map((location) => (
-                <option key={location} value={location}>{location}</option>
-              ))}
-            </select>
+              {/* Location Filter */}
+              <select
+                id="location"
+                value={filters.location}
+                onChange={handleFilter}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
+              >
+                <option value="">All Locations</option>
+                {locations.map((location) => (
+                  <option key={location} value={location}>{location}</option>
+                ))}
+              </select>
 
-            {/* Property Type Filter */}
-            <select
-              id="propertyType"
-              value={filters.propertyType}
-              onChange={handleFilter}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
-            >
-              <option value="">All Types</option>
-              {propertyTypes.map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
+              {/* Number of Rooms Filter */}
+              <select
+                id="rooms"
+                value={filters.rooms}
+                onChange={handleFilter}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
+              >
+                <option value="">All Room Types</option>
+                {roomOptions.map((rooms) => (
+                  <option key={rooms} value={rooms}>{rooms}</option>
+                ))}
+              </select>
 
-            {/* Price Range Filter */}
-            <select
-              id="cost"
-              value={filters.cost}
-              onChange={handleFilter}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
-            >
-              <option value="">All Price Ranges</option>
-              <option value="1-5">1-5 Cr</option>
-              <option value="5-10">5-10 Cr</option>
-              <option value="10+">10+ Cr</option>
-            </select>
+              {/* Price Range Filter */}
+              <select
+                id="cost"
+                value={filters.cost}
+                onChange={handleFilter}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent bg-white text-sm sm:text-base"
+              >
+                <option value="">All Price Ranges</option>
+                <option value="1-5">1-5 Cr</option>
+                <option value="5-10">5-10 Cr</option>
+                <option value="10+">10+ Cr</option>
+              </select>
+            </div>
           </div>
         </div>
 

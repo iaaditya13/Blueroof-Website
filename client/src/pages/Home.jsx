@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import SwiperCore from 'swiper';
@@ -8,14 +8,17 @@ import ListingItem from '../components/ListingItem';
 import { FaSearch, FaMapMarkerAlt, FaRegBuilding, FaHandshake } from 'react-icons/fa';
 import { BsHouseDoor, BsBuilding } from 'react-icons/bs';
 import Footer from '../components/Footer'; // Add Footer component import
-import { featuredProperties } from '../utils/dummyData';
+import ContactPopup from '../components/ContactPopup'; // Add ContactPopup component import
+import { featuredProperties } from '../data/featuredProperties';
 
 export default function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false); // Add state for ContactPopup
   SwiperCore.use([Navigation]);
 
   const handleSearch = (e) => {
@@ -24,6 +27,14 @@ export default function Home() {
       navigate(`/explore?searchTerm=${encodeURIComponent(searchTerm)}`);
     }
   };
+
+  useEffect(() => {
+    if (location.state?.scrollToFeatured) {
+      document.getElementById('featured-properties')?.scrollIntoView({ behavior: 'smooth' });
+      // Clear the state to prevent scrolling on subsequent renders
+      navigate('/', { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -62,17 +73,15 @@ export default function Home() {
       <div className='relative bg-[#f0f5ff] min-h-[90vh] flex items-center'>
         <div className='absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent'></div>
         <div className='max-w-6xl mx-auto px-4 z-10 w-full'>
-          <div className='grid md:grid-cols-2 gap-12 items-center'>
-            <div>
-              <h1 className='text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight'>
-                Crafted for <br />
-                those who seek <br />
-                the best
+          <div className='flex flex-col items-center text-center md:text-left md:grid md:grid-cols-2 gap-8 md:gap-12'>
+            <div className='w-full'>
+              <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight'>
+                Crafted for those who seek the best
               </h1>
-              <p className='text-xl text-gray-600 mb-8 max-w-lg'>
+              <p className='text-lg sm:text-xl text-gray-600 mb-8 max-w-lg mx-auto md:mx-0'>
                 Explore properties, projects, and locations to suit your lifestyle. Find your perfect home with BlueRoof.
               </p>
-              <form onSubmit={handleSearch} className='relative max-w-2xl'>
+              <form onSubmit={handleSearch} className='relative max-w-2xl mx-auto md:mx-0 mb-8 md:mb-0'>
                 <input
                   type='text'
                   placeholder='Find your ideal property, project, or location...'
@@ -84,6 +93,13 @@ export default function Home() {
                   <FaSearch />
                 </button>
               </form>
+            </div>
+            <div className='block md:hidden w-full max-w-md mx-auto'>
+              <img 
+                src='/src/assets/hero.png' 
+                alt='Real Estate'
+                className='w-full h-auto'
+              />
             </div>
             <div className='hidden md:block'>
               <img 
@@ -98,76 +114,57 @@ export default function Home() {
 
       {/* Carousel Section */}
       <div className='max-w-6xl mx-auto py-12 px-4'>
-        <h2 className='text-3xl font-bold text-gray-900 mb-8'>Featured Properties</h2>
+        {/* <h2 className='text-3xl font-bold text-gray-900 mb-8'>Featured Properties</h2> */}
         <Swiper
           navigation
           pagination={{ clickable: true }}
           loop={true}
           spaceBetween={30}
           slidesPerView={1}
-          className='h-[500px] rounded-2xl overflow-hidden'
+          className='rounded-2xl overflow-hidden'
         >
           <SwiperSlide>
-            <div className='relative w-full h-full'>
+            <div className='relative w-full h-[300px] md:h-[600px]'>
               <img 
                 src={new URL('../assets/1.jpg', import.meta.url).href}
                 alt='Luxury Home'
-                className='w-full h-full object-cover'
+                className='absolute inset-0 w-full h-full object-cover object-center'
               />
-              <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8'>
-                <h3 className='text-white text-2xl font-bold mb-2'>Luxury Villa</h3>
-                <p className='text-white/90'>Experience the epitome of luxury living</p>
-              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className='relative w-full h-full'>
+            <div className='relative w-full h-[300px] md:h-[600px]'>
               <img 
                 src={new URL('../assets/2.jpg', import.meta.url).href}
                 alt='Modern Apartment'
-                className='w-full h-full object-cover'
+                className='absolute inset-0 w-full h-full object-cover object-center'
               />
-              <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8'>
-                <h3 className='text-white text-2xl font-bold mb-2'>Modern Apartments</h3>
-                <p className='text-white/90'>Contemporary living in the heart of the city</p>
-              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className='relative w-full h-full'>
+            <div className='relative w-full h-[300px] md:h-[600px]'>
               <img 
                 src={new URL('../assets/3.jpg', import.meta.url).href}
                 alt='Beachfront Property'
-                className='w-full h-full object-cover'
+                className='absolute inset-0 w-full h-full object-cover object-center'
               />
-              <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8'>
-                <h3 className='text-white text-2xl font-bold mb-2'>Beachfront Homes</h3>
-                <p className='text-white/90'>Wake up to stunning ocean views</p>
-              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className='relative w-full h-full'>
+            <div className='relative w-full h-[300px] md:h-[600px]'>
               <img 
                 src={new URL('../assets/4.jpg', import.meta.url).href}
-                alt='Countryside Estate'
-                className='w-full h-full object-cover'
+                alt='Luxury Penthouse'
+                className='absolute inset-0 w-full h-full object-cover object-center'
               />
-              <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8'>
-                <h3 className='text-white text-2xl font-bold mb-2'>Countryside Estates</h3>
-                <p className='text-white/90'>Peaceful living in nature's embrace</p>
-              </div>
             </div>
           </SwiperSlide>
         </Swiper>
       </div>
 
       {/* Featured Properties Section */}
-      <div className='max-w-6xl mx-auto py-16 px-4'>
+      <div id="featured-properties" className='max-w-6xl mx-auto py-16 px-4'>
         <h2 className='text-4xl font-bold text-gray-800 mb-6'>Featured Properties</h2>
-        <Link to="/search" className='text-blue-600 mb-8 hover:underline cursor-pointer block'>
-          Show more properties
-        </Link>
         
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           {featuredProperties.map((property) => (
@@ -175,24 +172,21 @@ export default function Home() {
               <div className='bg-white rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105'>
                 <div className='relative h-64'>
                   <img 
-                    src={property.image}
+                    src={property.imageUrls[0]}
                     alt={property.name}
                     className='w-full h-full object-cover'
                   />
-                  <div className='absolute top-4 right-4 bg-[#FF5A3D] text-white px-3 py-1 rounded-full text-sm'>
-                    {property.type}
-                  </div>
                 </div>
                 <div className='p-6 bg-[#0A0B2E] text-white'>
                   <h3 className='text-2xl font-bold mb-2'>{property.name}</h3>
                   <p className='flex items-center gap-2 text-gray-300 mb-2'>
-                    <span className='inline-block'>📍</span> {property.location}
+                    <span className='inline-block'>📍</span> {property.address}
                   </p>
                   <p className='text-sm text-gray-300 mb-4 line-clamp-2'>
                     {property.description}
                   </p>
                   <div className='flex items-center justify-between'>
-                    <p className='text-2xl font-bold text-[#FF5A3D]'>₹{property.price}Cr</p>
+                    <p className='text-2xl font-bold text-[#FF5A3D]'>₹{(property.regularPrice / 10000000).toFixed(2)} Cr</p>
                     <div className='flex gap-2'>
                       <span className='text-gray-300'>{property.bedrooms} beds</span>
                       <span className='text-gray-300'>•</span>
@@ -209,35 +203,41 @@ export default function Home() {
       {/* Signature Property Section */}
       <div className='max-w-6xl mx-auto py-16 px-4'>
         <h2 className='text-4xl font-bold text-gray-800 mb-6'>Signature property</h2>
-        <p className='text-blue-600 mb-8 hover:underline cursor-pointer'>Show more places ready to move</p>
+        {/* <p className='text-blue-600 mb-8 hover:underline cursor-pointer'>Show more places ready to move</p> */}
         
-        <div className='bg-white rounded-2xl overflow-hidden shadow-lg'>
-          <div className='flex flex-col md:flex-row'>
-            {/* Property Image */}
-            <div className='md:w-2/3'>
+        {/* Signature Property Card */}
+        <div className='bg-white rounded-2xl overflow-hidden shadow-xl'>
+          <div className='grid md:grid-cols-2'>
+            <div className='relative h-[300px] md:h-full'>
               <img 
-                src={new URL('../assets/5.jpg', import.meta.url).href}
+                src='/src/assets/kalpataru.jpg'
                 alt='Kalpataru Vivant'
                 className='w-full h-full object-cover'
               />
             </div>
-            
-            {/* Property Details */}
-            <div className='md:w-1/3 bg-[#0A0B2E] text-white p-8 flex flex-col justify-between'>
+            <div className='bg-[#0A0B2E] text-white p-8 flex flex-col justify-between'>
               <div>
-                <h3 className='text-3xl font-bold mb-3'>Kalpataru Vivant</h3>
+                <h3 className='text-3xl font-bold mb-2'>Hubtown 25 South</h3>
                 <p className='text-gray-300 mb-4'>Andheri East, Western Suburbs, Mumbai</p>
-                <p className='text-[#FF5A3D] text-xl font-semibold mb-4'>2.45 Cr - 3.78 Cr</p>
-                <p className='text-lg mb-6'>2, 3 BHK Apartments</p>
+                <p className='text-[#FF5A3D] text-2xl font-bold mb-4'>2.45 Cr - 3.78 Cr</p>
+                <p className='text-xl mb-6'>2, 3 BHK Apartments</p>
               </div>
-              
-              <button className='w-full bg-[#FF5A3D] text-white py-3 px-6 rounded-lg hover:bg-[#FF4425] transition duration-300'>
+              <button
+                onClick={() => setIsContactPopupOpen(true)}
+                className='bg-[#FF5A3D] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-all text-lg font-semibold w-full md:w-auto'
+              >
                 Contact
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Contact Popup */}
+      <ContactPopup 
+        isOpen={isContactPopupOpen} 
+        onClose={() => setIsContactPopupOpen(false)} 
+      />
 
       {/* Featured Developers Section */}
       <div className='max-w-6xl mx-auto py-16 px-4'>

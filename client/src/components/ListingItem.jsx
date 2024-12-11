@@ -8,7 +8,7 @@ export default function ListingItem({ listing }) {
       className="block w-full h-full"
     >
       <div className='bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full'>
-        <div className='relative aspect-[4/3] w-full'>
+        <div className='relative w-full md:aspect-[4/3] aspect-[16/9]'>
           <img
             src={listing.imageUrls[0]}
             alt={listing.name}
@@ -26,9 +26,6 @@ export default function ListingItem({ listing }) {
             <p className='font-semibold text-[#FF5A3D] text-sm sm:text-base whitespace-nowrap'>
               ₹{(listing.regularPrice / 10000000).toFixed(2)} Cr
             </p>
-            <span className='bg-[#FF5A3D] text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm whitespace-nowrap'>
-              {listing.type}
-            </span>
           </div>
         </div>
       </div>
