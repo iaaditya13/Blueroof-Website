@@ -23,12 +23,22 @@ export default function Header() {
     if (isMenuOpen) toggleMenu();
   };
 
+  const handleNewsClick = (e) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollToNews: true } });
+    } else {
+      document.getElementById('news-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (isMenuOpen) toggleMenu();
+  };
+
   return (
     <header className='bg-[#1a1f3d] text-white relative'>
       <div className='flex justify-between items-center max-w-7xl mx-auto p-4'>
         <Link to='/' className='flex items-center gap-2 z-20'>
           <img 
-            src="src/assets/logo-removebg-preview (1).png" 
+            src="/assets/logo-removebg-preview (1).png" 
             alt="BlueRoof India" 
             className="h-8"
           />
@@ -64,9 +74,12 @@ export default function Header() {
           >
             Post Property (Free)
           </button>
-          <Link to='/news' className='hover:text-[#FF5A3D] transition duration-300'>
+          <button 
+            onClick={handleNewsClick}
+            className='hover:text-[#FF5A3D] transition duration-300'
+          >
             News
-          </Link>
+          </button>
           <Link to='/explore' className='hover:text-[#FF5A3D] transition duration-300'>
             Explore
           </Link>
@@ -91,11 +104,7 @@ export default function Header() {
           <div className="flex flex-col h-full">
             {/* Menu Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-700">
-              <img 
-                src="/blueroof-logo.png" 
-                alt="BlueRoof India" 
-                className="h-8"
-              />
+              <span className="text-lg font-bold">Menu</span>
               <button 
                 onClick={toggleMenu}
                 className="text-2xl text-gray-400 hover:text-white transition-colors"
@@ -135,13 +144,12 @@ export default function Header() {
               >
                 Post Property (Free)
               </button>
-              <Link 
-                to='/news' 
-                className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center'
-                onClick={toggleMenu}
+              <button 
+                onClick={handleNewsClick}
+                className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center text-left w-full'
               >
                 News
-              </Link>
+              </button>
               <Link 
                 to='/explore' 
                 className='py-3 px-4 hover:bg-[#FF5A3D] hover:bg-opacity-10 rounded-lg transition-colors flex items-center'

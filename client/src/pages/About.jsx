@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaHome, FaHandshake, FaChartLine, FaUsers } from 'react-icons/fa';
+import Footer from '../components/Footer';
 
 const About = () => {
   return (
-    <div>
+    <div className="bg-[#F0F7FF] min-h-screen">
       {/* Hero Section */}
       <div className='bg-gradient-to-r from-blue-600 to-blue-800 py-20 px-4'>
         <div className='max-w-6xl mx-auto text-center'>
@@ -31,9 +32,9 @@ const About = () => {
           </div>
           <div className='grid grid-cols-2 gap-6'>
             {[
-              { icon: FaHome, title: '1000+', desc: 'Properties Listed' },
-              { icon: FaUsers, title: '2000+', desc: 'Happy Clients' },
-              { icon: FaHandshake, title: '500+', desc: 'Successful Deals' },
+              { icon: FaHome, title: '5+', desc: 'Cities' },
+              { icon: FaUsers, title: '1000+', desc: 'Happy Clients' },
+              { icon: FaHandshake, title: '150+', desc: 'Developers' },
               { icon: FaChartLine, title: '98%', desc: 'Client Satisfaction' }
             ].map((item, index) => (
               <div key={index} className='bg-white p-6 rounded-xl shadow-lg text-center'>
@@ -81,13 +82,14 @@ const About = () => {
             Join thousands of satisfied clients who have found their perfect property with BlueRoof.
           </p>
           <Link
-            to='/search'
+            to='/Explore'
             className='inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition'
           >
             Start Your Search
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -12,10 +12,12 @@ import Listing from './pages/Listing';
 import Search from './pages/Search';
 import Explore from './pages/Explore';
 import PropertyDetails from './pages/PropertyDetails';
+import ScrollToTop from './components/ScrollToTop';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col overflow-x-hidden">
         <Header />
         <main className="flex-grow">

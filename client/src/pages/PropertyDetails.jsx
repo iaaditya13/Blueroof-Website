@@ -1,17 +1,54 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaMapMarkerAlt, FaParking, FaWhatsapp, FaYoutube, FaInstagram } from 'react-icons/fa';
-import { BiBuildingHouse } from 'react-icons/bi';
+import { FaMapMarkerAlt, FaParking, FaWhatsapp, FaYoutube, FaInstagram, FaSwimmingPool, FaDumbbell, FaTree, FaChild, FaHome, FaShieldAlt, FaFilm, FaHotTub, FaConciergeBell, FaHelicopter, FaBed, FaRulerCombined, FaCouch, FaBuilding, FaClock, FaCalendarAlt } from 'react-icons/fa';
+import { BiBuildingHouse, BiBed, BiArea, BiIdCard, BiBuildings, BiTime, BiCalendar, BiMapAlt } from 'react-icons/bi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { useEffect, useState } from 'react';
 import { allListings } from '../data/propertyData';
+import Footer from '../components/Footer';
+
+// Icon mapping for specifications
+const specIconMap = {
+  'BHK': FaBed,
+  'Built-up Area': FaRulerCombined,
+  'Furnished': FaCouch,
+  'Floor': FaBuilding,
+  'Age of Construction': FaClock,
+  'Available From': FaCalendarAlt
+};
+
+// Icon mapping for amenities
+const amenityIconMap = {
+  'Swimming Pool': FaSwimmingPool,
+  'Gym': FaDumbbell,
+  'Garden': FaTree,
+  'Club House': FaHome,
+  'Security': FaShieldAlt,
+  'Mini-Theater': FaFilm
+};
+
+const iconComponents = {
+  BiBed,
+  BiArea,
+  BiIdCard,
+  BiBuildings,
+  BiTime,
+  BiCalendar,
+  BiMapAlt
+};
 
 export default function PropertyDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [property, setProperty] = useState(null);
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
   SwiperCore.use([Navigation, Pagination, Autoplay]);
 
   // Get property data based on ID
@@ -30,11 +67,11 @@ export default function PropertyDetails() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-[#F0F7FF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 overflow-hidden">
         {/* Image Slider */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 sm:mb-8">
-          <div className="aspect-[16/9] w-full relative">
+          <div className="w-full relative">
             <Swiper
               navigation
               pagination={{ clickable: true }}
@@ -70,14 +107,13 @@ export default function PropertyDetails() {
               <p className="text-xl sm:text-2xl font-bold text-[#FF5A3D]">
                 ₹{(property.regularPrice / 10000000).toFixed(2)} Cr
               </p>
-              <p className="text-gray-600 text-sm sm:text-base">{property.type}</p>
             </div>
           </div>
 
           {/* Social Media Buttons */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <a
-              href={`https://wa.me/+919876543210?text=Hi,%20I'm%20interested%20in%20the%20property%20${encodeURIComponent(property.name)}`}
+              href={`https://wa.me/7738434767?text=Hi,%20I'm%20interested%20in%20the%20property%20${encodeURIComponent(property.name)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition-colors text-sm sm:text-base"
@@ -86,7 +122,7 @@ export default function PropertyDetails() {
               Contact on WhatsApp
             </a>
             <a
-              href="https://youtube.com/channel/your-channel"
+              href="https://www.youtube.com/@blueroofindia"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
@@ -95,7 +131,7 @@ export default function PropertyDetails() {
               Watch Video Tour
             </a>
             <a
-              href="https://instagram.com/your-profile"
+              href="https://www.instagram.com/blueroofindia?igsh=MWpyYWw4Mm5iZ2lscQ=="
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base"
@@ -110,8 +146,18 @@ export default function PropertyDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Description */}
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4">Description</h2>
-            <p className="text-gray-700 text-sm sm:text-base leading-relaxed">{property.description}</p>
+            <div className="mt-6">
+              <h2 className="text-2xl font-semibold mb-4">Description</h2>
+              <p className={`text-gray-600 ${!showFullDescription && 'line-clamp-3'}`}>
+                {property.description}
+              </p>
+              <button 
+                onClick={toggleDescription}
+                className="text-blue-600 hover:text-blue-800 mt-2 font-medium"
+              >
+                {showFullDescription ? 'Show Less' : 'Show More'}
+              </button>
+            </div>
           </div>
 
           {/* Quick Info */}
@@ -144,29 +190,45 @@ export default function PropertyDetails() {
         </div>
 
         {/* Specifications */}
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mt-6 sm:mt-8">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4">Specifications</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {property.specifications.map((spec, index) => (
-              <div key={index} className="bg-gray-50 p-3 sm:p-4 rounded-lg text-sm sm:text-base">
-                {spec}
-              </div>
-            ))}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-6">Specifications</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {property.specifications.map((spec, index) => {
+              const IconComponent = iconComponents[spec.icon];
+              return (
+                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="text-blue-600 text-xl">
+                    <IconComponent />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">{spec.label}</p>
+                    <p className="font-medium">{spec.value}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* Amenities */}
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mt-6 sm:mt-8">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4">Amenities</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {property.amenities.map((amenity, index) => (
-              <div key={index} className="bg-gray-50 p-3 sm:p-4 rounded-lg text-center text-sm sm:text-base">
-                {amenity}
-              </div>
-            ))}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-6">Amenities</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {property.amenities.map((amenity, index) => {
+              const IconComponent = amenityIconMap[amenity];
+              return (
+                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="text-[#FF5A3D] text-xl">
+                    <IconComponent />
+                  </div>
+                  <span className="font-medium">{amenity}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

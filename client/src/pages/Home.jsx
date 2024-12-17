@@ -37,6 +37,14 @@ export default function Home() {
   }, [location.state, navigate]);
 
   useEffect(() => {
+    if (location.state?.scrollToNews) {
+      document.getElementById('news-section')?.scrollIntoView({ behavior: 'smooth' });
+      // Clear the state
+      navigate('/', { state: {}, replace: true });
+    }
+  }, [location.state?.scrollToNews, navigate]);
+
+  useEffect(() => {
     const fetchListings = async () => {
       try {
         const [offerRes, saleRes, rentRes] = await Promise.all([
@@ -68,31 +76,37 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-[#F0F7FF]">
       {/* Hero Section */}
-      <div className='relative bg-[#f0f5ff] min-h-[90vh] flex items-center'>
-        <div className='absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent'></div>
-        <div className='max-w-6xl mx-auto px-4 z-10 w-full'>
-          <div className='flex flex-col items-center text-center md:text-left md:grid md:grid-cols-2 gap-8 md:gap-12'>
-            <div className='w-full'>
-              <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight'>
-                Crafted for those who seek the best
+      <div className="relative bg-[#F0F7FF] pt-8 sm:pt-12 pb-8 sm:pb-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Text Content */}
+            <div className="text-center sm:text-left">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 capitalize">
+                Crafted For Those Who Seek The Best!
               </h1>
-              <p className='text-lg sm:text-xl text-gray-600 mb-8 max-w-lg mx-auto md:mx-0'>
-                Explore properties, projects, and locations to suit your lifestyle. Find your perfect home with BlueRoof.
+              <p className="text-lg text-gray-600 mb-8">
+                Explore Properties, Projects, And Locations To Suit Your Lifestyle. Find Your Perfect Home With BlueRoof.
               </p>
-              <form onSubmit={handleSearch} className='relative max-w-2xl mx-auto md:mx-0 mb-8 md:mb-0'>
+              
+              {/* Search Bar */}
+              <div className="relative max-w-md mx-auto sm:mx-0">
                 <input
-                  type='text'
-                  placeholder='Find your ideal property, project, or location...'
-                  className='w-full px-6 py-4 rounded-full bg-white shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 pr-12'
+                  type="text"
+                  placeholder="Find your ideal property, project, or location..."
+                  className="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF5A3D] focus:border-transparent"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button type='submit' className='absolute right-2 top-1/2 -translate-y-1/2 bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition'>
-                  <FaSearch />
+                <button
+                  type="submit"
+                  onClick={handleSearch}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#FF5A3D] text-white p-2 rounded-full hover:bg-[#FF4A2D] transition-colors"
+                >
+                  <FaSearch className="w-4 h-4" />
                 </button>
-              </form>
+              </div>
             </div>
             <div className='block md:hidden w-full max-w-md mx-auto'>
               <img 
@@ -113,121 +127,121 @@ export default function Home() {
       </div>
 
       {/* Carousel Section */}
-      <div className='max-w-6xl mx-auto py-12 px-4'>
-        {/* <h2 className='text-3xl font-bold text-gray-900 mb-8'>Featured Properties</h2> */}
-        <Swiper
-          navigation
-          pagination={{ clickable: true }}
-          loop={true}
-          spaceBetween={30}
-          slidesPerView={1}
-          className='rounded-2xl overflow-hidden'
-        >
-          <SwiperSlide>
-            <div className='relative w-full h-[300px] md:h-[600px]'>
-              <img 
-                src={new URL('../assets/1.jpg', import.meta.url).href}
-                alt='Luxury Home'
-                className='absolute inset-0 w-full h-full object-cover object-center'
-              />
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className='relative w-full h-[300px] md:h-[600px]'>
-              <img 
-                src={new URL('../assets/2.jpg', import.meta.url).href}
-                alt='Modern Apartment'
-                className='absolute inset-0 w-full h-full object-cover object-center'
-              />
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className='relative w-full h-[300px] md:h-[600px]'>
-              <img 
-                src={new URL('../assets/3.jpg', import.meta.url).href}
-                alt='Beachfront Property'
-                className='absolute inset-0 w-full h-full object-cover object-center'
-              />
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className='relative w-full h-[300px] md:h-[600px]'>
-              <img 
-                src={new URL('../assets/4.jpg', import.meta.url).href}
-                alt='Luxury Penthouse'
-                className='absolute inset-0 w-full h-full object-cover object-center'
-              />
-            </div>
-          </SwiperSlide>
-        </Swiper>
+      <div className='bg-[#F0F7FF] py-12'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <Swiper
+            navigation
+            pagination={{ clickable: true }}
+            loop={true}
+            spaceBetween={30}
+            slidesPerView={1}
+            className='rounded-2xl overflow-hidden'
+          >
+            <SwiperSlide>
+              <div className='relative w-full h-[300px] md:h-[600px]'>
+                <img 
+                  src={new URL('../assets/1.jpg', import.meta.url).href}
+                  alt='Luxury Home'
+                  className='absolute inset-0 w-full h-full object-cover object-center'
+                />
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className='relative w-full h-[300px] md:h-[600px]'>
+                <img 
+                  src={new URL('../assets/2.jpg', import.meta.url).href}
+                  alt='Modern Apartment'
+                  className='absolute inset-0 w-full h-full object-cover object-center'
+                />
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className='relative w-full h-[300px] md:h-[600px]'>
+                <img 
+                  src={new URL('../assets/3.jpg', import.meta.url).href}
+                  alt='Beachfront Property'
+                  className='absolute inset-0 w-full h-full object-cover object-center'
+                />
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className='relative w-full h-[300px] md:h-[600px]'>
+                <img 
+                  src={new URL('../assets/4.jpg', import.meta.url).href}
+                  alt='Luxury Penthouse'
+                  className='absolute inset-0 w-full h-full object-cover object-center'
+                />
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        </div>
       </div>
 
       {/* Featured Properties Section */}
-      <div id="featured-properties" className='max-w-6xl mx-auto py-16 px-4'>
-        <h2 className='text-4xl font-bold text-gray-800 mb-6'>Featured Properties</h2>
-        
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          {featuredProperties.map((property) => (
-            <Link to={`/property/${property._id}`} key={property._id}>
-              <div className='bg-white rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105'>
-                <div className='relative h-64'>
-                  <img 
-                    src={property.imageUrls[0]}
-                    alt={property.name}
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-                <div className='p-6 bg-[#0A0B2E] text-white'>
-                  <h3 className='text-2xl font-bold mb-2'>{property.name}</h3>
-                  <p className='flex items-center gap-2 text-gray-300 mb-2'>
-                    <span className='inline-block'>📍</span> {property.address}
-                  </p>
-                  <p className='text-sm text-gray-300 mb-4 line-clamp-2'>
-                    {property.description}
-                  </p>
-                  <div className='flex items-center justify-between'>
-                    <p className='text-2xl font-bold text-[#FF5A3D]'>₹{(property.regularPrice / 10000000).toFixed(2)} Cr</p>
-                    <div className='flex gap-2'>
-                      <span className='text-gray-300'>{property.bedrooms} beds</span>
-                      <span className='text-gray-300'>•</span>
-                      <span className='text-gray-300'>{property.bathrooms} baths</span>
+      <div id="featured-properties" className='bg-[#F0F7FF] py-16'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <h2 className='text-4xl font-bold text-gray-800 mb-6'>Featured Properties</h2>
+          
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+            {featuredProperties.map((property) => (
+              <Link to={`/property/${property._id}`} key={property._id}>
+                <div className='bg-white rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105'>
+                  <div className='relative h-64'>
+                    <img 
+                      src={property.imageUrls[0]}
+                      alt={property.name}
+                      className='w-full h-full object-cover'
+                    />
+                  </div>
+                  <div className='p-6 bg-[#0A0B2E] text-white'>
+                    <h3 className='text-2xl font-bold mb-2'>{property.name}</h3>
+                    <p className='flex items-center gap-2 text-gray-300 mb-2'>
+                      <span className='inline-block'>📍</span> {property.address}
+                    </p>
+                    <p className='text-sm text-gray-300 mb-4 line-clamp-2'>
+                      {property.description}
+                    </p>
+                    <div className='flex items-center justify-between'>
+                      <p className='text-2xl font-bold text-[#FF5A3D]'>₹{(property.regularPrice / 10000000).toFixed(2)} Cr</p>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Signature Property Section */}
-      <div className='max-w-6xl mx-auto py-16 px-4'>
-        <h2 className='text-4xl font-bold text-gray-800 mb-6'>Signature property</h2>
-        {/* <p className='text-blue-600 mb-8 hover:underline cursor-pointer'>Show more places ready to move</p> */}
-        
-        {/* Signature Property Card */}
-        <div className='bg-white rounded-2xl overflow-hidden shadow-xl'>
-          <div className='grid md:grid-cols-2'>
-            <div className='relative h-[300px] md:h-full'>
-              <img 
-                src='/src/assets/kalpataru.jpg'
-                alt='Kalpataru Vivant'
-                className='w-full h-full object-cover'
-              />
-            </div>
-            <div className='bg-[#0A0B2E] text-white p-8 flex flex-col justify-between'>
-              <div>
-                <h3 className='text-3xl font-bold mb-2'>Hubtown 25 South</h3>
-                <p className='text-gray-300 mb-4'>Andheri East, Western Suburbs, Mumbai</p>
-                <p className='text-[#FF5A3D] text-2xl font-bold mb-4'>2.45 Cr - 3.78 Cr</p>
-                <p className='text-xl mb-6'>2, 3 BHK Apartments</p>
+      <div className='bg-[#F0F7FF] py-16'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <h2 className='text-4xl font-bold text-gray-800 mb-6'>Signature property</h2>
+          {/* <p className='text-blue-600 mb-8 hover:underline cursor-pointer'>Show more places ready to move</p> */}
+          
+          {/* Signature Property Card */}
+          <div className='bg-white rounded-2xl overflow-hidden shadow-xl'>
+            <div className='grid md:grid-cols-2'>
+              <div className='relative h-[300px] md:h-full'>
+                <img 
+                  src='/assets/Properties Images/AaradhyaAvaan/AaradhyaAvaan01.jpg'
+                  alt='Signature Property'
+                  className='w-full h-full object-cover'
+                />
               </div>
-              <button
-                onClick={() => setIsContactPopupOpen(true)}
-                className='bg-[#FF5A3D] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-all text-lg font-semibold w-full md:w-auto'
-              >
-                Contact
-              </button>
+              <div className='bg-[#0A0B2E] text-white p-8 flex flex-col justify-between'>
+                <div>
+                  <h3 className='text-3xl font-bold mb-2'>MICL Aaradhya Avaan</h3>
+                  <p className='text-gray-300 mb-4'>Tardeo, Mumabai</p>
+                  <p className='text-[#FF5A3D] text-2xl font-bold mb-4'>7.99 Cr - 18.49 Cr</p>
+                  <p className='text-xl mb-6'>3, 4 BHK Apartments</p>
+                </div>
+                <button
+                  onClick={() => setIsContactPopupOpen(true)}
+                  className='bg-[#FF5A3D] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-all text-lg font-semibold w-full md:w-auto'
+                >
+                  Contact
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -240,142 +254,146 @@ export default function Home() {
       />
 
       {/* Featured Developers Section */}
-      <div className='max-w-6xl mx-auto py-16 px-4'>
-        <h2 className='text-4xl font-bold text-gray-800 mb-12'>Featured Developers</h2>
-        
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          {/* Lodha Developer Card */}
-          <div className='bg-white rounded-xl p-6 shadow-lg text-center'>
-            <div className='w-24 h-24 mx-auto mb-4 rounded-full bg-[#FF5A3D]/10 flex items-center justify-center'>
-              <img 
-                src="https://i.imgur.com/8zWPvXX.png"
-                alt="Lodha"
-                className='w-16 h-16 object-contain'
-              />
+      <div className='bg-[#F0F7FF] py-16'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <h2 className='text-4xl font-bold text-gray-800 mb-12'>Featured Developers</h2>
+          
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+            {/* Lodha Developer Card */}
+            <div className='bg-white rounded-xl p-6 shadow-lg text-center'>
+              <div className='w-24 h-24 mx-auto mb-4 rounded-full bg-[#FF5A3D]/10 flex items-center justify-center'>
+                <img 
+                  src="/assets/Lodha.png"
+                  alt="Lodha"
+                  className='w-16 h-16 object-contain'
+                />
+              </div>
+              <h3 className='text-2xl font-bold mb-2'>Lodha</h3>
+              <p className='flex items-center justify-center gap-2 text-gray-600 mb-3'>
+                {/* <span className='inline-block'>📍</span> Kokshet Road */}
+              </p>
+              <p className='text-gray-600 mb-4'>
+                Premium homes with world-class amenities and breathtaking views.
+              </p>
+              <p className='flex items-center justify-center gap-1 text-[#FF5A3D] font-medium'>
+                {/* <span className='inline-block'>📍</span> Thane */}
+              </p>
             </div>
-            <h3 className='text-2xl font-bold mb-2'>Lodha</h3>
-            <p className='flex items-center justify-center gap-2 text-gray-600 mb-3'>
-              <span className='inline-block'>📍</span> Kokshet Road
-            </p>
-            <p className='text-gray-600 mb-4'>
-              Premium homes with world-class amenities and breathtaking views.
-            </p>
-            <p className='flex items-center justify-center gap-1 text-[#FF5A3D] font-medium'>
-              <span className='inline-block'>📍</span> Thane
-            </p>
-          </div>
 
-          {/* Piramal Developer Card */}
-          <div className='bg-white rounded-xl p-6 shadow-lg text-center'>
-            <div className='w-24 h-24 mx-auto mb-4 rounded-full bg-[#FF5A3D]/10 flex items-center justify-center'>
-              <img 
-                src="https://i.imgur.com/JQZqQiX.png"
-                alt="Piramal"
-                className='w-16 h-16 object-contain'
-              />
+            {/* Piramal Developer Card */}
+            <div className='bg-white rounded-xl p-6 shadow-lg text-center'>
+              <div className='w-24 h-24 mx-auto mb-4 rounded-full bg-[#FF5A3D]/10 flex items-center justify-center'>
+                <img 
+                  src="/assets/Piramal.png"
+                  alt="Piramal"
+                  className='w-16 h-16 object-contain'
+                />
+              </div>
+              <h3 className='text-2xl font-bold mb-2'>Piramal</h3>
+              <p className='flex items-center justify-center gap-2 text-gray-600 mb-3'>
+                {/* <span className='inline-block'>📍</span> Lower Parel */}
+              </p>
+              <p className='text-gray-600 mb-4'>
+                Luxury residences that redefine modern living in Mumbai.
+              </p>
+              <p className='flex items-center justify-center gap-1 text-[#FF5A3D] font-medium'>
+                {/* <span className='inline-block'>📍</span> Mumbai */}
+              </p>
             </div>
-            <h3 className='text-2xl font-bold mb-2'>Piramal</h3>
-            <p className='flex items-center justify-center gap-2 text-gray-600 mb-3'>
-              <span className='inline-block'>📍</span> Lower Parel
-            </p>
-            <p className='text-gray-600 mb-4'>
-              Luxury residences that redefine modern living in Mumbai.
-            </p>
-            <p className='flex items-center justify-center gap-1 text-[#FF5A3D] font-medium'>
-              <span className='inline-block'>📍</span> Mumbai
-            </p>
-          </div>
 
-          {/* Runwal Developer Card */}
-          <div className='bg-white rounded-xl p-6 shadow-lg text-center'>
-            <div className='w-24 h-24 mx-auto mb-4 rounded-full bg-[#FF5A3D]/10 flex items-center justify-center'>
-              <img 
-                src="https://i.imgur.com/L5AqUXk.png"
-                alt="Runwal"
-                className='w-16 h-16 object-contain'
-              />
+            {/* Runwal Developer Card */}
+            <div className='bg-white rounded-xl p-6 shadow-lg text-center'>
+              <div className='w-24 h-24 mx-auto mb-4 rounded-full bg-[#FF5A3D]/10 flex items-center justify-center'>
+                <img 
+                  src="/assets/Runwal.jpg"
+                  alt="Runwal"
+                  className='w-16 h-16 object-contain'
+                />
+              </div>
+              <h3 className='text-2xl font-bold mb-2'>Runwal</h3>
+              <p className='flex items-center justify-center gap-2 text-gray-600 mb-3'>
+                {/* <span className='inline-block'>📍</span> Mulund West */}
+              </p>
+              <p className='text-gray-600 mb-4'>
+                Affordable yet stylish homes in a vibrant community.
+              </p>
+              <p className='flex items-center justify-center gap-1 text-[#FF5A3D] font-medium'>
+                {/* <span className='inline-block'>📍</span> Mumbai */}
+              </p>
             </div>
-            <h3 className='text-2xl font-bold mb-2'>Runwal</h3>
-            <p className='flex items-center justify-center gap-2 text-gray-600 mb-3'>
-              <span className='inline-block'>📍</span> Mulund West
-            </p>
-            <p className='text-gray-600 mb-4'>
-              Affordable yet stylish homes in a vibrant community.
-            </p>
-            <p className='flex items-center justify-center gap-1 text-[#FF5A3D] font-medium'>
-              <span className='inline-block'>📍</span> Mumbai
-            </p>
           </div>
         </div>
       </div>
 
       {/* Latest News and Articles Section */}
-      <div className='max-w-6xl mx-auto py-16 px-4'>
-        <h2 className='text-4xl font-bold text-gray-800 mb-12'>Latest News and Articles</h2>
-        
-        <Swiper
-          navigation
-          pagination={{ clickable: true }}
-          loop={true}
-          spaceBetween={30}
-          slidesPerView={1}
-          className='h-[400px] rounded-2xl'
-        >
-          {/* Article 1 */}
-          <SwiperSlide>
-            <div className='grid md:grid-cols-2 h-full'>
-              <img 
-                src="https://i.imgur.com/qVb5dGs.jpg" 
-                alt="Fire Safety"
-                className='w-full h-full object-cover'
-              />
-              <div className='bg-white p-8'>
-                <h3 className='text-2xl font-bold mb-4'>Maharashtra issues special fire safety regulations</h3>
-                <p className='text-gray-600 mb-4'>
-                  Maharashtra government on October 11, 2024 has issued final notifications to enforce fire safety norms for vulnerable buildings in Mumbai and Maharashtra.
-                </p>
-                <button className='text-[#FF5A3D] font-semibold hover:underline'>Read More →</button>
+      <section id="news-section" className='max-w-7xl mx-auto px-4 py-16'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <h2 className='text-4xl font-bold text-gray-800 mb-12'>Latest News and Articles</h2>
+          
+          <Swiper
+            navigation
+            pagination={{ clickable: true }}
+            loop={true}
+            spaceBetween={30}
+            slidesPerView={1}
+            className='h-[400px] rounded-2xl'
+          >
+            {/* Article 1 */}
+            <SwiperSlide>
+              <div className='grid md:grid-cols-2 h-full'>
+                <img 
+                  src="/assets/Firenews.png" 
+                  alt="Fire Safety"
+                  className='w-full h-full object-cover'
+                />
+                <div className='bg-white p-8'>
+                  <h3 className='text-2xl font-bold mb-4'>Maharashtra issues special fire safety regulations</h3>
+                  <p className='text-gray-600 mb-4'>
+                    Maharashtra government on October 11, 2024 has issued final notifications to enforce fire safety norms for vulnerable buildings in Mumbai and Maharashtra.
+                  </p>
+                  <button className='text-[#FF5A3D] font-semibold hover:underline'>Read More →</button>
+                </div>
               </div>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
 
-          {/* Article 2 */}
-          <SwiperSlide>
-            <div className='grid md:grid-cols-2 h-full'>
-              <img 
-                src="https://i.imgur.com/mB6JvxP.jpg" 
-                alt="Antilia"
-                className='w-full h-full object-cover'
-              />
-              <div className='bg-white p-8'>
-                <h3 className='text-2xl font-bold mb-4'>Everything you want to know about Mukesh Ambani's Antilia house</h3>
-                <p className='text-gray-600 mb-4'>
-                  The Ambani house is the world's most expensive biggest residential property.
-                </p>
-                <button className='text-[#FF5A3D] font-semibold hover:underline'>Read More →</button>
+            {/* Article 2 */}
+            <SwiperSlide>
+              <div className='grid md:grid-cols-2 h-full'>
+                <img 
+                  src="/assets/amb news.jpg" 
+                  alt="Antilia"
+                  className='w-full h-full object-cover'
+                />
+                <div className='bg-white p-8'>
+                  <h3 className='text-2xl font-bold mb-4'>Everything you want to know about Mukesh Ambani's Antilia house</h3>
+                  <p className='text-gray-600 mb-4'>
+                    The Ambani house is the world's most expensive biggest residential property.
+                  </p>
+                  <button className='text-[#FF5A3D] font-semibold hover:underline'>Read More →</button>
+                </div>
               </div>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
 
-          {/* Article 3 */}
-          <SwiperSlide>
-            <div className='grid md:grid-cols-2 h-full'>
-              <img 
-                src="https://i.imgur.com/L9HJ7Vw.jpg" 
-                alt="Anil Ambani House"
-                className='w-full h-full object-cover'
-              />
-              <div className='bg-white p-8'>
-                <h3 className='text-2xl font-bold mb-4'>Inside industrialist Anil Ambani's house in Mumbai</h3>
-                <p className='text-gray-600 mb-4'>
-                  Anil Ambani's lavish home is counted among the most expensive homes in India. The 17-storey structure is situated at Pali Hill in Mumbai.
-                </p>
-                <button className='text-[#FF5A3D] font-semibold hover:underline'>Read More →</button>
+            {/* Article 3 */}
+            <SwiperSlide>
+              <div className='grid md:grid-cols-2 h-full'>
+                <img 
+                  src="/assets/anilamb news.jpg" 
+                  alt="Anil Ambani House"
+                  className='w-full h-full object-cover'
+                />
+                <div className='bg-white p-8'>
+                  <h3 className='text-2xl font-bold mb-4'>Inside industrialist Anil Ambani's house in Mumbai</h3>
+                  <p className='text-gray-600 mb-4'>
+                    Anil Ambani's lavish home is counted among the most expensive homes in India. The 17-storey structure is situated at Pali Hill in Mumbai.
+                  </p>
+                  <button className='text-[#FF5A3D] font-semibold hover:underline'>Read More →</button>
+                </div>
               </div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </div>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </section>
 
       <Footer /> 
     </div>
